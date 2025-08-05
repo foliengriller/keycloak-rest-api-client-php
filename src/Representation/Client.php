@@ -32,6 +32,9 @@ use Fschmtt\Keycloak\Type\Map;
  * @method string|null getBaseUrl()
  * @method self withBaseUrl(?string $baseUrl)
  *
+ * @method string|null getRealm()
+ * @method self withRealm(?string $realm)
+ *
  * @method bool|null getBearerOnly()
  * @method self withBearerOnly(?bool $bearerOnly)
  *
@@ -132,6 +135,7 @@ class Client extends Representation
         protected ?bool $authorizationServicesEnabled = null,
         protected ?ResourceServer $authorizationSettings = null,
         protected ?string $baseUrl = null,
+        protected ?string $realm = null,
         protected ?bool $bearerOnly = null,
         protected ?string $clientAuthenticatorType = null,
         protected ?string $clientId = null,
