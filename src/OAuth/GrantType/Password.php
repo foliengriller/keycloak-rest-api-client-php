@@ -22,16 +22,16 @@ class Password implements GrantTypeInterface
     /**
      * @throws JsonException|GuzzleException
      */
-    public function fetchTokens(ClientInterface $httpClient, string $baseUrl, ?string $refreshToken = null): array
+    public function fetchTokens(ClientInterface $httpClient, string $baseUrl, string $realm, ?string $refreshToken = null): array
     {
         if ($refreshToken) {
             try {
-                $response = $this->getTokensWithRefreshToken($httpClient, $baseUrl, $refreshToken);
+                $response = $this->getTokensWithRefreshToken($httpClient, $baseUrl, $realm, $refreshToken);
             } catch (ClientException) {
-                $response = $this->getTokensWithPassword($httpClient, $baseUrl);
+                $response = $this->getTokensWithPassword($httpClient, $baseUrl, $realm);
             }
         } else {
-            $response = $this->getTokensWithPassword($httpClient, $baseUrl);
+            $response = $this->getTokensWithPassword($httpClient, $baseUrl, $realm);
         }
 
         $tokens = json_decode(
@@ -53,10 +53,11 @@ class Password implements GrantTypeInterface
         ClientInterface $httpClient,
         string $baseUrl,
         string $refreshToken,
+        string $realm,
     ): ResponseInterface {
         return $httpClient->request(
             'POST',
-            $baseUrl . '/realms/master/protocol/openid-connect/token',
+            $baseUrl . '/realms/' . $realm . '/protocol/openid-connect/token',
             [
                 'form_params' => [
                     'grant_type' => 'refresh_token',
@@ -70,11 +71,11 @@ class Password implements GrantTypeInterface
     /**
      * @throws GuzzleException
      */
-    private function getTokensWithPassword(ClientInterface $httpClient, string $baseUrl): ResponseInterface
+    private function getTokensWithPassword(ClientInterface $httpClient, string $baseUrl, string $realm): ResponseInterface
     {
         return $httpClient->request(
             'POST',
-            $baseUrl . '/realms/master/protocol/openid-connect/token',
+            $baseUrl . '/realms/' . $realm . '/protocol/openid-connect/token',
             [
                 'form_params' => [
                     'grant_type' => 'password',
