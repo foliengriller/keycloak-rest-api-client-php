@@ -20,11 +20,11 @@ class ClientCredentials implements GrantTypeInterface
      * @throws GuzzleException
      * @throws JsonException
      */
-    public function fetchTokens(ClientInterface $httpClient, string $baseUrl, ?string $refreshToken = null): array
+    public function fetchTokens(ClientInterface $httpClient, string $baseUrl, string $realm, ?string $refreshToken = null): array
     {
         $response = $httpClient->request(
             'POST',
-            $baseUrl . '/realms/master/protocol/openid-connect/token',
+            $baseUrl . '/realms/' . $realm . '/protocol/openid-connect/token',
             [
                 'form_params' => [
                     'grant_type' => 'client_credentials',

@@ -34,6 +34,7 @@ class Keycloak
     private Serializer $serializer;
     private CommandExecutor $commandExecutor;
     private QueryExecutor $queryExecutor;
+    private string $realm;
 
     /**
      * @param string $username (Deprecated) Username for password grant. Use $grantType instead.
@@ -41,6 +42,7 @@ class Keycloak
      */
     public function __construct(
         private readonly string $baseUrl,
+        string $realm,
         string $username = "",
         string $password = "",
         private readonly TokenStorageInterface $tokenStorage = new InMemory(),
@@ -69,6 +71,7 @@ class Keycloak
         $this->serializer = new Serializer($this->version);
         $this->commandExecutor = new CommandExecutor($this->client, $this->serializer);
         $this->queryExecutor = new QueryExecutor($this->client, $this->serializer);
+        $this->realm = $realm;
     }
 
     public function getBaseUrl(): string
@@ -157,5 +160,10 @@ class Keycloak
         $this->version = $this->serverInfo()->get()->getSystemInfo()->getVersion();
         $this->serializer = new Serializer($this->version);
         $this->commandExecutor = new CommandExecutor($this->client, $this->serializer);
+    }
+
+    public function getRealm(): string
+    {
+        return $this->realm;
     }
 }

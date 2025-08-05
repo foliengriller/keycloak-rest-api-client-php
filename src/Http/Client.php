@@ -63,6 +63,7 @@ class Client
         ] = $this->grantType->fetchTokens(
             $this->httpClient,
             $this->keycloak->getBaseUrl(),
+            $this->keycloak->getRealm(),
             $this->tokenStorage->retrieveRefreshToken()?->toString(),
         );
 
