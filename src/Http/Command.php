@@ -7,9 +7,6 @@ namespace Fschmtt\Keycloak\Http;
 use Fschmtt\Keycloak\Collection\Collection;
 use Fschmtt\Keycloak\Representation\Representation;
 
-/**
- * @internal
- */
 class Command
 {
     public function __construct(
@@ -17,8 +14,8 @@ class Command
         private readonly Method $method,
         /** @var array<string, string> */
         private readonly array $parameters = [],
-        /** @var Representation|Collection|array<mixed>|null */
-        private readonly Representation|Collection|array|null $payload = null,
+        /** @var Representation|Collection|array<mixed>|string|null */
+        private readonly Representation|Collection|array|string|null $payload = null,
         private readonly ?Criteria $criteria = null,
         private readonly ContentType $contentType = ContentType::JSON,
     ) {}
@@ -47,9 +44,9 @@ class Command
     }
 
     /**
-     * @return Representation|Collection|array<mixed>|null
+     * @return Representation|Collection|array<mixed>|string|null
      */
-    public function getPayload(): Representation|Collection|array|null
+    public function getPayload(): Representation|Collection|array|string|null
     {
         return $this->payload;
     }

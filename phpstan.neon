@@ -8,4 +8,4 @@ parameters:
     - examples
 
 includes:
-    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+  - vendor/phpstan/phpstan-deprecation-rules/rules.neon
