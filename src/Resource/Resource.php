@@ -6,6 +6,7 @@ namespace Fschmtt\Keycloak\Resource;
 
 use Fschmtt\Keycloak\Http\CommandExecutor;
 use Fschmtt\Keycloak\Http\QueryExecutor;
+use Fschmtt\Keycloak\Representation\Organization;
 
 /**
  * @codeCoverageIgnore
