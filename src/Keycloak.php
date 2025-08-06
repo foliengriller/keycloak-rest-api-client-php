@@ -116,7 +116,7 @@ class Keycloak
     {
         $this->fetchVersion();
 
-        return new Users($this->commandExecutor, $this->queryExecutor);
+        return new Users($this->commandExecutor, $this->queryExecutor, $this->getRealm());
     }
 
     public function groups(): Groups

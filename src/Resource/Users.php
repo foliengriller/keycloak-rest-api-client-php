@@ -17,8 +17,11 @@ use Fschmtt\Keycloak\Representation\User as UserRepresentation;
 
 class Users extends Resource
 {
-    public function all(string $realm, ?Criteria $criteria = null): UserCollection
+    public function all(?string $realm, ?Criteria $criteria = null): UserCollection
     {
+        if (!$realm) {
+            $realm = $this->realm;
+        }
         return $this->queryExecutor->executeQuery(
             new Query(
                 '/admin/realms/{realm}/users',
