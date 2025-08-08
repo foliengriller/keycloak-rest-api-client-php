@@ -18,7 +18,7 @@ abstract class Resource
         protected readonly String $realm,
     ) {}
 
-    public function getRealm(string $realm): string
+    public function getRealm(string|null $realm): string
     {
         if (!$realm) {
             return $this->realm;
