@@ -18,7 +18,7 @@ class IdentityProviders extends Resource
         $realm = $this->getRealm($realm);
         return $this->queryExecutor->executeQuery(
             new Query(
-                ' /admin/realms/{realm}/identity-provider/instances',
+                '/admin/realms/{realm}/identity-provider/instances',
                 UserCollection::class,
                 [
                     'realm' => $realm,
