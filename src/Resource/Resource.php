@@ -6,7 +6,6 @@ namespace Fschmtt\Keycloak\Resource;
 
 use Fschmtt\Keycloak\Http\CommandExecutor;
 use Fschmtt\Keycloak\Http\QueryExecutor;
-use Fschmtt\Keycloak\Representation\Organization;
 
 /**
  * @codeCoverageIgnore
@@ -18,4 +17,13 @@ abstract class Resource
         protected readonly QueryExecutor $queryExecutor,
         protected readonly String $realm,
     ) {}
+
+    public function getRealm(string $realm): string
+    {
+        if (!$realm) {
+            return $this->realm;
+        }
+
+        return $realm;
+    }
 }
