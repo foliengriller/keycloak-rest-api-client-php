@@ -116,12 +116,12 @@ class Keycloak
     {
         $this->fetchVersion();
 
-        return new AttackDetection($this->commandExecutor, $this->queryExecutor);
+        return new AttackDetection($this->commandExecutor, $this->queryExecutor, $this->getRealm());
     }
 
     public function serverInfo(): ServerInfo
     {
-        return new ServerInfo($this->commandExecutor, $this->queryExecutor);
+        return new ServerInfo($this->commandExecutor, $this->queryExecutor, $this->getRealm());
     }
 
     /**
@@ -131,7 +131,7 @@ class Keycloak
     {
         $this->fetchVersion();
 
-        return new Realms($this->commandExecutor, $this->queryExecutor);
+        return new Realms($this->commandExecutor, $this->queryExecutor, $this->getRealm());
     }
 
     /**
@@ -141,7 +141,7 @@ class Keycloak
     {
         $this->fetchVersion();
 
-        return new Clients($this->commandExecutor, $this->queryExecutor);
+        return new Clients($this->commandExecutor, $this->queryExecutor, $this->getRealm());
     }
 
     /**
@@ -161,7 +161,7 @@ class Keycloak
     {
         $this->fetchVersion();
 
-        return new Groups($this->commandExecutor, $this->queryExecutor);
+        return new Groups($this->commandExecutor, $this->queryExecutor, $this->getRealm());
     }
 
     /**
@@ -171,7 +171,7 @@ class Keycloak
     {
         $this->fetchVersion();
 
-        return new Roles($this->commandExecutor, $this->queryExecutor);
+        return new Roles($this->commandExecutor, $this->queryExecutor, $this->getRealm());
     }
 
     /**
@@ -181,7 +181,7 @@ class Keycloak
     {
         $this->fetchVersion();
 
-        return new Organizations($this->commandExecutor, $this->queryExecutor);
+        return new Organizations($this->commandExecutor, $this->queryExecutor, $this->getRealm());
     }
 
     /**
