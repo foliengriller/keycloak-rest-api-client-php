@@ -11,6 +11,7 @@ use Fschmtt\Keycloak\Http\Method;
 use Fschmtt\Keycloak\Http\Query;
 use Fschmtt\Keycloak\Representation\Client as ClientRepresentation;
 use Fschmtt\Keycloak\Representation\Credential;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * @phpstan-type UserSession array<mixed>
@@ -43,6 +44,21 @@ class Clients extends Resource
                     'realm' => $realm,
                     'clientUuid' => $clientUuid,
                 ],
+            ),
+        );
+    }
+
+    public function create(ClientRepresentation $client, ?string $realm = null): ResponseInterface
+    {
+        $realm = $this->getRealm($realm);
+        return $this->commandExecutor->executeCommand(
+            new Command(
+                'admin/realms/{realm}/clients',
+                Method::POST,
+                [
+                    'realm' => $realm,
+                ],
+                $client,
             ),
         );
     }
@@ -82,10 +98,10 @@ class Clients extends Resource
         return $this->get($realm, $updatedClient->getId());
     }
 
-    public function delete(string $clientUuid, ?string $realm = null): void
+    public function delete(string $clientUuid, ?string $realm = null): ResponseInterface
     {
         $realm = $this->getRealm($realm);
-        $this->commandExecutor->executeCommand(
+        return $this->commandExecutor->executeCommand(
             new Command(
                 '/admin/realms/{realm}/clients/{clientUuid}',
                 Method::DELETE,
