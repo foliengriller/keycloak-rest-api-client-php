@@ -217,6 +217,69 @@ class Users extends Resource
         );
     }
 
+
+    public function retrieveClientRoles(string $realm, string $userId, string $clientUuid): RoleCollection
+    {
+        return $this->queryExecutor->executeQuery(
+            new Query(
+                '/admin/realms/{realm}/users/{userId}/role-mappings/clients/{clientUuid}',
+                RoleCollection::class,
+                [
+                    'realm' => $realm,
+                    'userId' => $userId,
+                    'clientUuid' => $clientUuid,
+                ],
+            ),
+        );
+    }
+
+    public function retrieveAvailableClientRoles(string $realm, string $userId, string $clientUuid): RoleCollection
+    {
+        return $this->queryExecutor->executeQuery(
+            new Query(
+                '/admin/realms/{realm}/users/{userId}/role-mappings/clients/{clientUuid}/available',
+                RoleCollection::class,
+                [
+                    'realm' => $realm,
+                    'userId' => $userId,
+                    'clientUuid' => $clientUuid,
+                ],
+            ),
+        );
+    }
+
+    public function addClientRoles(string $realm, string $userId, RoleCollection $roles, string $clientUuid): void
+    {
+        $this->commandExecutor->executeCommand(
+            new Command(
+                '/admin/realms/{realm}/users/{userId}/role-mappings/clients/{clientUuid}',
+                Method::POST,
+                [
+                    'realm' => $realm,
+                    'userId' => $userId,
+                    'clientUuid' => $clientUuid,
+                ],
+                $roles,
+            ),
+        );
+    }
+
+    public function removeClientRoles(string $realm, string $userId, RoleCollection $roles, string $clientUuid): void
+    {
+        $this->commandExecutor->executeCommand(
+            new Command(
+                '/admin/realms/{realm}/users/{userId}/role-mappings/clients/{clientUuid}',
+                Method::DELETE,
+                [
+                    'realm' => $realm,
+                    'userId' => $userId,
+                    'clientUuid' => $clientUuid,
+                ],
+                $roles,
+            ),
+        );
+    }
+
     /**
      * @param list<string>|null $actions
      */
