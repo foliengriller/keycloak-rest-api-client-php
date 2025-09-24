@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Fschmtt\Keycloak\Http;
 
 use Fschmtt\Keycloak\Serializer\Serializer;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * @internal
@@ -16,7 +17,7 @@ class CommandExecutor
         private readonly Serializer $serializer,
     ) {}
 
-    public function executeCommand(Command $command): void
+    public function executeCommand(Command $command): ResponseInterface
     {
         $payload = $command->getPayload();
 
@@ -30,7 +31,7 @@ class CommandExecutor
             ContentType::FORM_PARAMS => ['form_params' => $payload],
         };
 
-        $this->client->request(
+        return $this->client->request(
             $command->getMethod()->value,
             $command->getPath(),
             $options,
