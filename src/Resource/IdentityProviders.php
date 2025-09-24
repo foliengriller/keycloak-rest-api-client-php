@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Fschmtt\Keycloak\Resource;
 
 use Fschmtt\Keycloak\Collection\IdentityProviderCollection;
+use Fschmtt\Keycloak\Http\Command;
 use Fschmtt\Keycloak\Http\Criteria;
+use Fschmtt\Keycloak\Http\Method;
 use Fschmtt\Keycloak\Http\Query;
 use Fschmtt\Keycloak\Representation\IdentityProvider;
 
@@ -37,6 +39,21 @@ class IdentityProviders extends Resource
                     'realm' => $realm,
                     'alias' => $alias,
                 ],
+            ),
+        );
+    }
+
+    public function create(IdentityProvider $identityProvider, ?string $realm = null): void
+    {
+        $realm = $this->getRealm($realm);
+        $this->commandExecutor->executeCommand(
+            new Command(
+                '/admin/realms/{realm}identity-provider/instances/{alias}',
+                Method::POST,
+                [
+                    'realm' => $realm,
+                ],
+                $identityProvider,
             ),
         );
     }
