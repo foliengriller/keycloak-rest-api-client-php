@@ -80,10 +80,10 @@ class Clients extends Resource
         return $this->get($realm, $client->getId());
     }
 
-    public function update(string $clientUuid, ClientRepresentation $updatedClient, ?string $realm = null): ClientRepresentation
+    public function update(string $clientUuid, ClientRepresentation $updatedClient, ?string $realm = null): ResponseInterface
     {
         $realm = $this->getRealm($realm);
-        $this->commandExecutor->executeCommand(
+        return $this->commandExecutor->executeCommand(
             new Command(
                 '/admin/realms/{realm}/clients/{clientUuid}',
                 Method::PUT,
@@ -94,8 +94,6 @@ class Clients extends Resource
                 $updatedClient,
             ),
         );
-
-        return $this->get($realm, $updatedClient->getId());
     }
 
     public function delete(string $clientUuid, ?string $realm = null): ResponseInterface
