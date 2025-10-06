@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Fschmtt\Keycloak\Resource;
 
 use Fschmtt\Keycloak\Collection\ClientCollection;
+use Fschmtt\Keycloak\Collection\RoleCollection;
 use Fschmtt\Keycloak\Http\Command;
 use Fschmtt\Keycloak\Http\Criteria;
 use Fschmtt\Keycloak\Http\Method;
 use Fschmtt\Keycloak\Http\Query;
 use Fschmtt\Keycloak\Representation\Client as ClientRepresentation;
 use Fschmtt\Keycloak\Representation\Credential;
+use Fschmtt\Keycloak\Representation\User;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -137,6 +139,36 @@ class Clients extends Resource
             new Query(
                 '/admin/realms/{realm}/clients/{clientUuid}/client-secret',
                 Credential::class,
+                [
+                    'realm' => $realm,
+                    'clientUuid' => $clientUuid,
+                ],
+            ),
+        );
+    }
+
+    public function getClientRoles(string $clientUuid, ?string $realm = null): RoleCollection
+    {
+        $realm = $this->getRealm($realm);
+        return $this->queryExecutor->executeQuery(
+            new Query(
+                '/admin/realms/{realm}/clients/{clientUuid}/roles',
+                RoleCollection::class,
+                [
+                    'realm' => $realm,
+                    'clientUuid' => $clientUuid,
+                ],
+            ),
+        );
+    }
+
+    public function getServiceAccountUser(string $clientUuid, ?string $realm = null): User
+    {
+        $realm = $this->getRealm($realm);
+        return $this->queryExecutor->executeQuery(
+            new Query(
+                '/admin/realms/{realm}/clients/{clientUuid}/service-account-user',
+                RoleCollection::class,
                 [
                     'realm' => $realm,
                     'clientUuid' => $clientUuid,
