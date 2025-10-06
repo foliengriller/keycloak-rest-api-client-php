@@ -13,6 +13,7 @@ use Fschmtt\Keycloak\Http\Criteria;
 use Fschmtt\Keycloak\Http\Method;
 use Fschmtt\Keycloak\Http\Query;
 use Fschmtt\Keycloak\Representation\User as UserRepresentation;
+use Psr\Http\Message\ResponseInterface;
 
 class Users extends Resource
 {
@@ -218,8 +219,9 @@ class Users extends Resource
     }
 
 
-    public function retrieveClientRoles(string $realm, string $userId, string $clientUuid): RoleCollection
+    public function retrieveClientRoles(string $userId, string $clientUuid, ?string $realm = null): RoleCollection
     {
+        $realm = $this->getRealm($realm);
         return $this->queryExecutor->executeQuery(
             new Query(
                 '/admin/realms/{realm}/users/{userId}/role-mappings/clients/{clientUuid}',
@@ -233,8 +235,9 @@ class Users extends Resource
         );
     }
 
-    public function retrieveAvailableClientRoles(string $realm, string $userId, string $clientUuid): RoleCollection
+    public function retrieveAvailableClientRoles(string $userId, string $clientUuid, ?string $realm = null): RoleCollection
     {
+        $realm = $this->getRealm($realm);
         return $this->queryExecutor->executeQuery(
             new Query(
                 '/admin/realms/{realm}/users/{userId}/role-mappings/clients/{clientUuid}/available',
@@ -248,9 +251,10 @@ class Users extends Resource
         );
     }
 
-    public function addClientRoles(string $realm, string $userId, RoleCollection $roles, string $clientUuid): void
+    public function addClientRoles(string $userId, RoleCollection $roles, string $clientUuid, ?string $realm = null): ResponseInterface
     {
-        $this->commandExecutor->executeCommand(
+        $realm = $this->getRealm($realm);
+        return $this->commandExecutor->executeCommand(
             new Command(
                 '/admin/realms/{realm}/users/{userId}/role-mappings/clients/{clientUuid}',
                 Method::POST,
@@ -264,9 +268,10 @@ class Users extends Resource
         );
     }
 
-    public function removeClientRoles(string $realm, string $userId, RoleCollection $roles, string $clientUuid): void
+    public function removeClientRoles(string $userId, RoleCollection $roles, string $clientUuid, ?string $realm = null): ResponseInterface
     {
-        $this->commandExecutor->executeCommand(
+        $realm = $this->getRealm($realm);
+        return $this->commandExecutor->executeCommand(
             new Command(
                 '/admin/realms/{realm}/users/{userId}/role-mappings/clients/{clientUuid}',
                 Method::DELETE,
