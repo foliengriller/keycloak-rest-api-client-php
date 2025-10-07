@@ -168,7 +168,7 @@ class Clients extends Resource
         return $this->queryExecutor->executeQuery(
             new Query(
                 '/admin/realms/{realm}/clients/{clientUuid}/service-account-user',
-                RoleCollection::class,
+                User::class,
                 [
                     'realm' => $realm,
                     'clientUuid' => $clientUuid,
