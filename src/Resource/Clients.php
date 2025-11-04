@@ -6,6 +6,7 @@ namespace Fschmtt\Keycloak\Resource;
 
 use Fschmtt\Keycloak\Collection\ClientCollection;
 use Fschmtt\Keycloak\Collection\RoleCollection;
+use Fschmtt\Keycloak\Collection\UserCollection;
 use Fschmtt\Keycloak\Http\Command;
 use Fschmtt\Keycloak\Http\Criteria;
 use Fschmtt\Keycloak\Http\Method;
@@ -157,6 +158,22 @@ class Clients extends Resource
                 [
                     'realm' => $realm,
                     'clientUuid' => $clientUuid,
+                ],
+            ),
+        );
+    }
+
+    public function getClientRoleMembers(string $clientUuid, string $roleName, ?string $realm = null): UserCollection
+    {
+        $realm = $this->getRealm($realm);
+        return $this->queryExecutor->executeQuery(
+            new Query(
+                '/admin/realms/{realm}/clients/{clientUuid}/roles/{roleName}/users',
+                UserCollection::class,
+                [
+                    'realm' => $realm,
+                    'clientUuid' => $clientUuid,
+                    'roleName' => $roleName,
                 ],
             ),
         );
