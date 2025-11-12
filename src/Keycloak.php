@@ -165,7 +165,7 @@ class Keycloak
             return;
         }
 
-        $this->version = $this->serverInfo()->get()->getSystemInfo()->getVersion();
+        $this->version = '26.0.0';
         $this->serializer = new Serializer($this->version);
         $this->commandExecutor = new CommandExecutor($this->client, $this->serializer);
     }
