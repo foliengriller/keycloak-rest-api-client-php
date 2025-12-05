@@ -56,7 +56,7 @@ class Clients extends Resource
         $realm = $this->getRealm($realm);
         return $this->commandExecutor->executeCommand(
             new Command(
-                'admin/realms/{realm}/clients',
+                '/admin/realms/{realm}/clients',
                 Method::POST,
                 [
                     'realm' => $realm,
