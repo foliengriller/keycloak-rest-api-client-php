@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Fschmtt\Keycloak\Resource;
 
 use Fschmtt\Keycloak\Collection\IdentityProviderCollection;
+use Fschmtt\Keycloak\Collection\IdentityProviderMapperCollection;
 use Fschmtt\Keycloak\Http\Command;
 use Fschmtt\Keycloak\Http\Criteria;
 use Fschmtt\Keycloak\Http\Method;
 use Fschmtt\Keycloak\Http\Query;
 use Fschmtt\Keycloak\Representation\IdentityProvider;
+use Fschmtt\Keycloak\Representation\IdentityProviderMapper;
+use Psr\Http\Message\ResponseInterface;
 
 class IdentityProviders extends Resource
 {
@@ -54,6 +57,37 @@ class IdentityProviders extends Resource
                     'realm' => $realm,
                 ],
                 $identityProvider,
+            ),
+        );
+    }
+
+    public function getMappers(string $alias, ?string $realm = null): IdentityProviderMapperCollection
+    {
+        $realm = $this->getRealm($realm);
+        return $this->queryExecutor->executeQuery(
+            new Query(
+                '/admin/realms/{realm}/identity-provider/instances/{alias}/mappers',
+                IdentityProviderMapperCollection::class,
+                [
+                    'realm' => $realm,
+                    'alias' => $alias,
+                ],
+            ),
+        );
+    }
+
+    public function addMapper(IdentityProviderMapper $identityProviderMapper, string $alias, ?string $realm = null): ResponseInterface
+    {
+        $realm = $this->getRealm($realm);
+        return $this->commandExecutor->executeCommand(
+            new Command(
+                '/admin/realms/{realm}/identity-provider/instances/{alias}/mappers',
+                Method::POST,
+                [
+                    'realm' => $realm,
+                    'alias' => $alias,
+                ],
+                $identityProviderMapper,
             ),
         );
     }
