@@ -51,7 +51,7 @@ class IdentityProviders extends Resource
         $realm = $this->getRealm($realm);
         $this->commandExecutor->executeCommand(
             new Command(
-                '/admin/realms/{realm}identity-provider/instances/{alias}',
+                '/admin/realms/{realm}/identity-provider/instances/{alias}',
                 Method::POST,
                 [
                     'realm' => $realm,
