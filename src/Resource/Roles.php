@@ -10,6 +10,7 @@ use Fschmtt\Keycloak\Http\Criteria;
 use Fschmtt\Keycloak\Http\Method;
 use Fschmtt\Keycloak\Http\Query;
 use Fschmtt\Keycloak\Representation\Role;
+use Psr\Http\Message\ResponseInterface;
 
 class Roles extends Resource
 {
@@ -80,6 +81,22 @@ class Roles extends Resource
                     'roleName' => $role->getName(),
                 ],
                 $role,
+            ),
+        );
+    }
+
+    public function addComposite(string $roleId, RoleCollection $roles, ?string $realm = null): ResponseInterface
+    {
+        $realm = $this->getRealm($realm);
+        return $this->commandExecutor->executeCommand(
+            new Command(
+                '/admin/realms/{realm}/roles-by-id/{role-id}/composites',
+                Method::POST,
+                [
+                    'realm' => $realm,
+                    'role-id' => $roleId,
+                ],
+                $roles,
             ),
         );
     }
