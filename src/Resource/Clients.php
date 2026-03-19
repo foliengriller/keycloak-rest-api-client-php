@@ -193,4 +193,20 @@ class Clients extends Resource
             ),
         );
     }
+
+    public function setDefaultClientScope(string $clientUuid, string $clientScopeId, ?string $realm = null): ResponseInterface
+    {
+        $realm = $this->getRealm($realm);
+        return $this->commandExecutor->executeCommand(
+            new Command(
+                '/admin/realms/{realm}/clients/{clientUuid}/default-client-scopes/{clientScopeId}',
+                Method::PUT,
+                [
+                    'realm' => $realm,
+                    'clientUuid' => $clientUuid,
+                    'clientScopeId' => $clientScopeId,
+                ],
+            ),
+        );
+    }
 }
