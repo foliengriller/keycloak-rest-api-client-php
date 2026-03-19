@@ -14,6 +14,7 @@ use Fschmtt\Keycloak\Type\Map;
  * @method Map|null getClientImporters()
  * @method Map|null getClientInstallations()
  * @method Map|null getComponentTypes()
+ * @method CpuInfo|null getCpuInfo()
  * @method CryptoInfo|null getCryptoInfo()
  * @method Map|null getEnums()
  * @method FeatureCollection|null getFeatures()
@@ -36,6 +37,8 @@ class ServerInfo extends Representation
         protected ?Map $clientImporters = null,
         protected ?Map $clientInstallations = null,
         protected ?Map $componentTypes = null,
+        #[Since('26.3.0')]
+        protected ?CpuInfo $cpuInfo = null,
         #[Since('20.0.0')]
         protected ?CryptoInfo $cryptoInfo = null,
         protected ?Map $enums = null,
