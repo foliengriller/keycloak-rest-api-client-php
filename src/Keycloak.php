@@ -11,6 +11,7 @@ use Fschmtt\Keycloak\OAuth\GrantType;
 use Fschmtt\Keycloak\OAuth\TokenStorage\InMemory;
 use Fschmtt\Keycloak\OAuth\TokenStorageInterface;
 use Fschmtt\Keycloak\Resource\AttackDetection;
+use Fschmtt\Keycloak\Resource\ClientScopes;
 use Fschmtt\Keycloak\Resource\Clients;
 use Fschmtt\Keycloak\Resource\Groups;
 use Fschmtt\Keycloak\Resource\IdentityProviders;
@@ -132,6 +133,13 @@ class Keycloak
         $this->fetchVersion();
 
         return new Clients($this->commandExecutor, $this->queryExecutor, $this->getRealm());
+    }
+
+    public function clientScopes(): ClientScopes
+    {
+        $this->fetchVersion();
+
+        return new ClientScopes($this->commandExecutor, $this->queryExecutor, $this->getRealm());
     }
 
     public function users(): Users
