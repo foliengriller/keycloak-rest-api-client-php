@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Fschmtt\Keycloak\Resource;
 
 use Fschmtt\Keycloak\Collection\ClientScopeCollection;
-use Fschmtt\Keycloak\Http\Criteria;
 use Fschmtt\Keycloak\Http\Query;
+use Fschmtt\Keycloak\Representation\ClientScope;
 
 class ClientScopes extends Resource
 {
@@ -23,6 +23,19 @@ class ClientScopes extends Resource
                 ],
             ),
         );
+    }
+
+    public function getByName(string $name, ?string $realm = null): ?ClientScope
+    {
+        $realm = $this->getRealm($realm);
+
+        foreach ($this->all($realm) as $clientScope) {
+            if ($clientScope->getName() === $name) {
+                return $clientScope;
+            }
+        }
+
+        return null;
     }
 }
 
