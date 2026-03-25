@@ -13,6 +13,7 @@ use Fschmtt\Keycloak\Http\Method;
 use Fschmtt\Keycloak\Http\Query;
 use Fschmtt\Keycloak\Representation\Client as ClientRepresentation;
 use Fschmtt\Keycloak\Representation\Credential;
+use Fschmtt\Keycloak\Representation\Role;
 use Fschmtt\Keycloak\Representation\User;
 use Psr\Http\Message\ResponseInterface;
 
@@ -194,7 +195,7 @@ class Clients extends Resource
         );
     }
 
-    public function setDefaultClientScope(string $clientUuid, string $clientScopeId, ?string $realm = null): ResponseInterface
+    public function addDefaultClientScope(string $clientUuid, string $clientScopeId, ?string $realm = null): ResponseInterface
     {
         $realm = $this->getRealm($realm);
         return $this->commandExecutor->executeCommand(
@@ -205,6 +206,21 @@ class Clients extends Resource
                     'realm' => $realm,
                     'clientUuid' => $clientUuid,
                     'clientScopeId' => $clientScopeId,
+                ],
+            ),
+        );
+    }
+
+    public function createClientRole(string $clientUuid, Role $role, ?string $realm = null): ResponseInterface
+    {
+        $realm = $this->getRealm($realm);
+        return $this->commandExecutor->executeCommand(
+            new Command(
+                '/admin/realms/{realm}/clients/{clientUuid}/roles',
+                Method::POST,
+                [
+                    'realm' => $realm,
+                    'clientUuid' => $clientUuid,
                 ],
             ),
         );
