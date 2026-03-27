@@ -222,6 +222,7 @@ class Clients extends Resource
                     'realm' => $realm,
                     'clientUuid' => $clientUuid,
                 ],
+                $role,
             ),
         );
     }
