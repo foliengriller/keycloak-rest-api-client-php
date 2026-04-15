@@ -158,7 +158,7 @@ class Groups extends Resource
                     'groupId' => $group->getId(),
                     'clientId' => $clientRole->getContainerId(),
                 ],
-                $clientRole,
+                [$clientRole],
             ),
         );
     }
