@@ -29,7 +29,7 @@ class Groups extends Resource
         );
     }
 
-    public function byPath(string $path, ?string $realm): Group
+    public function byPath(string $path, ?string $realm = null): Group
     {
         $realm = $this->getRealm($realm);
         return $this->queryExecutor->executeQuery(
