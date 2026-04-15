@@ -11,6 +11,7 @@ use Fschmtt\Keycloak\Http\Criteria;
 use Fschmtt\Keycloak\Http\Method;
 use Fschmtt\Keycloak\Http\Query;
 use Fschmtt\Keycloak\Representation\Group;
+use Fschmtt\Keycloak\Representation\Role;
 
 class Groups extends Resource
 {
@@ -28,8 +29,9 @@ class Groups extends Resource
         );
     }
 
-    public function byPath(string $realm, string $path = ''): Group
+    public function byPath(string $path, ?string $realm): Group
     {
+        $realm = $this->getRealm($realm);
         return $this->queryExecutor->executeQuery(
             new Query(
                 '/admin/realms/{realm}/group-by-path/{path}',
@@ -140,6 +142,23 @@ class Groups extends Resource
                     'realm' => $realm,
                     'groupId' => $groupId,
                 ],
+            ),
+        );
+    }
+
+    public function addClientRoleMapping(Group $group, Role $clientRole, ?string $realm = null): void
+    {
+        $realm = $this->getRealm($realm);
+        $this->commandExecutor->executeCommand(
+            new Command(
+                '/admin/realms/{realm}/groups/{groupId}/role-mappings/clients/{clientId}',
+                Method::POST,
+                [
+                    'realm' => $realm,
+                    'groupId' => $group->getId(),
+                    'clientId' => $clientRole->getContainerId(),
+                ],
+                $clientRole,
             ),
         );
     }
