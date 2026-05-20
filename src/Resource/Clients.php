@@ -226,4 +226,20 @@ class Clients extends Resource
             ),
         );
     }
+
+    public function deleteClientRole(string $clientUuid, string $roleName, ?string $realm = null): ResponseInterface
+    {
+        $realm = $this->getRealm($realm);
+        return $this->commandExecutor->executeCommand(
+            new Command(
+                '/admin/realms/{realm}/clients/{clientUuid}/roles/{roleName}',
+                Method::DELETE,
+                [
+                    'realm' => $realm,
+                    'clientUuid' => $clientUuid,
+                    'roleName' => $roleName,
+                ],
+            ),
+        );
+    }
 }
