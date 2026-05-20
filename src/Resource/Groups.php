@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Fschmtt\Keycloak\Resource;
 
 use Fschmtt\Keycloak\Collection\GroupCollection;
+use Fschmtt\Keycloak\Collection\RoleCollection;
 use Fschmtt\Keycloak\Collection\UserCollection;
 use Fschmtt\Keycloak\Http\Command;
 use Fschmtt\Keycloak\Http\Criteria;
@@ -159,6 +160,22 @@ class Groups extends Resource
                     'clientId' => $clientRole->getContainerId(),
                 ],
                 [$clientRole],
+            ),
+        );
+    }
+
+    public function getClientRoleMappings(string $groupId, string $clientId, ?string $realm = null): RoleCollection
+    {
+        $realm = $this->getRealm($realm);
+        return $this->queryExecutor->executeQuery(
+            new Query(
+                '/admin/realms/{realm}/groups/{groupId}/role-mappings/clients/{clientId}',
+                RoleCollection::class,
+                [
+                    'realm' => $realm,
+                    'groupId' => $groupId,
+                    'clientId' => $clientId,
+                ],
             ),
         );
     }
