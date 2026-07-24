@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Fschmtt\Keycloak\Test\Unit\Resource;
 
 use Fschmtt\Keycloak\Collection\ClientCollection;
+use Fschmtt\Keycloak\Collection\UserSessionCollection;
 use Fschmtt\Keycloak\Http\Command;
 use Fschmtt\Keycloak\Http\CommandExecutor;
 use Fschmtt\Keycloak\Http\Method;
@@ -218,14 +219,14 @@ class ClientsTest extends TestCase
 
         $query = new Query(
             '/admin/realms/{realm}/clients/{clientUuid}/user-sessions',
-            'array',
+            UserSessionCollection::class,
             [
                 'realm' => 'test-realm',
                 'clientUuid' => $clientId,
             ],
         );
 
-        $userSessions = [];
+        $userSessions = new UserSessionCollection();
 
         $queryExecutor = $this->createMock(QueryExecutor::class);
         $queryExecutor->expects(static::once())
