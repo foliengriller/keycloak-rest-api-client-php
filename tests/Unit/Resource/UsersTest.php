@@ -8,6 +8,7 @@ use Fschmtt\Keycloak\Collection\CredentialCollection;
 use Fschmtt\Keycloak\Collection\GroupCollection;
 use Fschmtt\Keycloak\Collection\RoleCollection;
 use Fschmtt\Keycloak\Collection\UserCollection;
+use Fschmtt\Keycloak\Collection\UserSessionCollection;
 use Fschmtt\Keycloak\Http\Command;
 use Fschmtt\Keycloak\Http\CommandExecutor;
 use Fschmtt\Keycloak\Http\ContentType;
@@ -113,6 +114,36 @@ class UsersTest extends TestCase
         $users->create('test-realm', $createdUser);
     }
 
+    public function testGetSessions(): void
+    {
+        $query = new Query(
+            '/admin/realms/{realm}/users/{userId}/sessions',
+            UserSessionCollection::class,
+            [
+                'realm' => 'test-realm',
+                'userId' => 'test-user',
+            ],
+        );
+
+        $sessions = new UserSessionCollection();
+
+        $queryExecutor = $this->createMock(QueryExecutor::class);
+        $queryExecutor->expects(static::once())
+            ->method('executeQuery')
+            ->with($query)
+            ->willReturn($sessions);
+
+        $users = new Users(
+            $this->createMock(CommandExecutor::class),
+            $queryExecutor,
+        );
+
+        static::assertSame(
+            $sessions,
+            $users->getSessions('test-user', 'test-realm'),
+        );
+    }
+
     public function testDeleteUser(): void
     {
         $deletedUser = new User(id: 'deleted-user');
@@ -197,6 +228,30 @@ class UsersTest extends TestCase
         );
 
         $users->search('test-realm', $criteria);
+    }
+
+    public function testCountUsers(): void
+    {
+        $query = new Query(
+            '/admin/realms/{realm}/users/count',
+            'int',
+            [
+                'realm' => 'test-realm',
+            ],
+        );
+
+        $queryExecutor = $this->createMock(QueryExecutor::class);
+        $queryExecutor->expects(static::once())
+            ->method('executeQuery')
+            ->with($query)
+            ->willReturn(42);
+
+        $users = new Users(
+            $this->createMock(CommandExecutor::class),
+            $queryExecutor,
+        );
+
+        static::assertSame(42, $users->count(realm: 'test-realm'));
     }
 
     public function testJoinGroup(): void

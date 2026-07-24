@@ -6,6 +6,7 @@ namespace Fschmtt\Keycloak\Resource;
 
 use Fschmtt\Keycloak\Collection\ClientCollection;
 use Fschmtt\Keycloak\Collection\RoleCollection;
+use Fschmtt\Keycloak\Collection\UserSessionCollection;
 use Fschmtt\Keycloak\Collection\UserCollection;
 use Fschmtt\Keycloak\Http\Command;
 use Fschmtt\Keycloak\Http\Criteria;
@@ -17,9 +18,6 @@ use Fschmtt\Keycloak\Representation\Role;
 use Fschmtt\Keycloak\Representation\User;
 use Psr\Http\Message\ResponseInterface;
 
-/**
- * @phpstan-type UserSession array<mixed>
- */
 class Clients extends Resource
 {
     public function all(?Criteria $criteria = null, ?string $realm = null): ClientCollection
@@ -115,16 +113,13 @@ class Clients extends Resource
         );
     }
 
-    /**
-     * @return UserSession[]
-     */
-    public function getUserSessions(string $clientUuid, ?Criteria $criteria = null, ?string $realm = null): array
+    public function getUserSessions(string $clientUuid, ?Criteria $criteria = null, ?string $realm = null): UserSessionCollection
     {
         $realm = $this->getRealm($realm);
         return $this->queryExecutor->executeQuery(
             new Query(
                 '/admin/realms/{realm}/clients/{clientUuid}/user-sessions',
-                'array',
+                UserSessionCollection::class,
                 [
                     'realm' => $realm,
                     'clientUuid' => $clientUuid,

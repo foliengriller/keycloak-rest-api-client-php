@@ -8,6 +8,7 @@ use Fschmtt\Keycloak\Collection\CredentialCollection;
 use Fschmtt\Keycloak\Collection\GroupCollection;
 use Fschmtt\Keycloak\Collection\RoleCollection;
 use Fschmtt\Keycloak\Collection\UserCollection;
+use Fschmtt\Keycloak\Collection\UserSessionCollection;
 use Fschmtt\Keycloak\Http\Command;
 use Fschmtt\Keycloak\Http\Criteria;
 use Fschmtt\Keycloak\Http\Method;
@@ -40,6 +41,21 @@ class Users extends Resource
             new Command(
                 '/admin/realms/{realm}/users/{userId}/logout',
                 Method::POST,
+                [
+                    'realm' => $realm,
+                    'userId' => $userId,
+                ],
+            ),
+        );
+    }
+
+    public function getSessions(string $userId, ?string $realm = null): UserSessionCollection
+    {
+        $realm = $this->getRealm($realm);
+        return $this->queryExecutor->executeQuery(
+            new Query(
+                '/admin/realms/{realm}/users/{userId}/sessions',
+                UserSessionCollection::class,
                 [
                     'realm' => $realm,
                     'userId' => $userId,
