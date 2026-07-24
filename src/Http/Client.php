@@ -68,7 +68,7 @@ class Client
 
     public function isAuthorized(): bool
     {
-        return $this->tokenStorage->retrieveAccessToken()?->isExpired(new DateTime()) === false;
+        return $this->tokenStorage->retrieveAccessToken()?->isExpired((new DateTime())->add(new \DateInterval('PT30S'))) === false;
     }
 
     private function authorize(): void
@@ -91,8 +91,8 @@ class Client
     {
         if ($refreshToken = $this->tokenStorage->retrieveRefreshToken()) {
             $refreshTokenGrantType = new RefreshToken(
-                $this->grantType->clientId,
                 $refreshToken->toString(),
+                $this->grantType->clientId,
                 $this->grantType->realm,
                 $this->grantType->clientSecret,
                 $this->grantType->scope,
