@@ -32,6 +32,22 @@ class Users extends Resource
         );
     }
 
+    public function logout(string $userId, ?string $realm = null): ResponseInterface
+    {
+        $realm = $this->getRealm($realm);
+
+        return $this->queryExecutor->executeQuery(
+            new Query(
+                '/admin/realms/{realm}/users/{userId}/logout',
+                ResponseInterface::class,
+                [
+                    'realm' => $realm,
+                    'userId' => $userId,
+                ],
+            ),
+        );
+    }
+
     public function get(string $userId, ?string $realm = null): UserRepresentation
     {
         $realm = $this->getRealm($realm);
@@ -106,6 +122,51 @@ class Users extends Resource
                 $criteria,
             ),
         );
+    }
+
+    public function count(?Criteria $criteria = null, ?string $realm = null): int
+    {
+        $realm = $this->getRealm($realm);
+
+        return $this->queryExecutor->executeQuery(
+            new Query(
+                '/admin/realms/{realm}/users/count',
+                'int',
+                [
+                    'realm' => $realm,
+                ],
+                $criteria,
+            ),
+        );
+    }
+
+    /**
+     * @param list<Criteria> $criteriaList
+     * @return array<int>
+     */
+    public function countByCriteriaList(array $criteriaList, ?string $realm = null): array
+    {
+        if ([] === $criteriaList) {
+            return [];
+        }
+
+        $realm = $this->getRealm($realm);
+        $queries = [];
+
+        foreach ($criteriaList as $criteria) {
+            $queries[] = new Query(
+                '/admin/realms/{realm}/users/count',
+                'int',
+                [
+                    'realm' => $realm,
+                ],
+                $criteria,
+            );
+        }
+
+        $counts = $this->queryExecutor->executeQueries($queries);
+
+        return array_map(static fn (mixed $count): int => (int) $count, $counts);
     }
 
     public function joinGroup(string $userId, string $groupId, ?string $realm = null): void
