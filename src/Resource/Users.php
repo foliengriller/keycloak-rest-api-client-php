@@ -36,10 +36,10 @@ class Users extends Resource
     {
         $realm = $this->getRealm($realm);
 
-        return $this->queryExecutor->executeQuery(
-            new Query(
+        return $this->commandExecutor->executeCommand(
+            new Command(
                 '/admin/realms/{realm}/users/{userId}/logout',
-                ResponseInterface::class,
+                Method::POST,
                 [
                     'realm' => $realm,
                     'userId' => $userId,
