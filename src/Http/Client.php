@@ -10,6 +10,7 @@ use Fschmtt\Keycloak\OAuth\GrantType;
 use Fschmtt\Keycloak\OAuth\GrantType\RefreshToken;
 use Fschmtt\Keycloak\OAuth\TokenStorageInterface;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Promise\PromiseInterface;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token;
 use Psr\Http\Message\ResponseInterface;
@@ -60,6 +61,17 @@ class Client
         $options = array_merge_recursive($options, $defaultOptions);
 
         return $this->httpClient->request(
+            $method,
+            $this->keycloak->getBaseUrl() . $path,
+            $options,
+        );
+    }
+
+    public function requestAsync(string $method, string $path = '', array $options = []): PromiseInterface
+    {
+        $options = $this->createAuthorizedOptions($options);
+
+        return $this->httpClient->requestAsync(
             $method,
             $this->keycloak->getBaseUrl() . $path,
             $options,
@@ -125,5 +137,21 @@ class Client
             'access_token' => $tokens['access_token'],
             'refresh_token' => $tokens['refresh_token'] ?? null,
         ];
+    }
+
+    private function createAuthorizedOptions(array $options): array
+    {
+        if (!$this->isAuthorized()) {
+            $this->authorize();
+        }
+
+        $defaultOptions = [
+            'base_uri' => $this->keycloak->getBaseUrl(),
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->tokenStorage->retrieveAccessToken()->toString(),
+            ],
+        ];
+
+        return array_merge_recursive($options, $defaultOptions);
     }
 }

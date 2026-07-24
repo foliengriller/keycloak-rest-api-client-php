@@ -6,6 +6,7 @@ namespace Fschmtt\Keycloak\Http;
 
 use Fschmtt\Keycloak\Json\JsonDecoder;
 use Fschmtt\Keycloak\Serializer\Serializer;
+use GuzzleHttp\Promise\Utils;
 
 /**
  * @internal
@@ -32,5 +33,39 @@ class QueryExecutor
             $query->getReturnType(),
             $response->getBody()->getContents(),
         );
+    }
+
+    public function executeQueries(array $queries): array
+    {
+        if ([] === $queries) {
+            return [];
+        }
+
+        $promises = [];
+        foreach ($queries as $index => $query) {
+            $promises[$index] = $this->client->requestAsync(
+                $query->getMethod()->value,
+                $query->getPath(),
+            );
+        }
+
+        $responses = Utils::unwrap($promises);
+        $results = [];
+
+        foreach ($queries as $index => $query) {
+            $response = $responses[$index];
+            if ($query->getReturnType() === 'array') {
+                $results[] = (new JsonDecoder())->decode($response->getBody()->getContents());
+
+                continue;
+            }
+
+            $results[] = $this->serializer->deserialize(
+                $query->getReturnType(),
+                $response->getBody()->getContents(),
+            );
+        }
+
+        return $results;
     }
 }
